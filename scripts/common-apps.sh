@@ -24,13 +24,19 @@ systemctl enable xrdp
 systemctl start xrdp
 
 # Install firewalld if not installed
-if ! command -v firewall-cmd &> /dev/null
-then
-    sudo yum install -y firewalld
-    sudo systemctl start firewalld
-    sudo systemctl enable firewalld
-fi
+# if ! command -v firewall-cmd &> /dev/null
+# then
+#     sudo yum install -y firewalld
+#     sudo systemctl start firewalld
+#     sudo systemctl enable firewalld
+# fi
 
 # Enable firewall port for RDP
 firewall-cmd --permanent --add-port=3389/tcp
 firewall-cmd --reload
+
+firewall-cmd --list-ports
+
+iptables -A INPUT -p tcp --dport 3389 -j ACCEPT 
+iptables-save
+systemctl restart xrdp
