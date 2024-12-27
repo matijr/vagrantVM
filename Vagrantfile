@@ -1,6 +1,6 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
-SCRIPT_PATH= "E:\\projects\\vagrantVM\\scripts"
+# SCRIPT_PATH= "./scripts"
 
 # All Vagrant configuration is done below. The "2" in Vagrant.configure
 # configures the configuration version (we support older styles for
@@ -16,12 +16,12 @@ Vagrant.configure("2") do |config|
 
     config.vm.provision "APPS",
     type: "shell",
-    path: "#{SCRIPT_PATH}\\common-apps.sh"
+    path: "./scripts/common-apps.sh"
 
     # You can disable this if you don't need DevOps tools
     config.vm.provision "DEVOPS", after: "APPS", 
     type: "shell",
-    path: "#{SCRIPT_PATH}\\devops-tools.sh"
+    path: "./scripts/devops-tools.sh"
 
   config.vm.network "forwarded_port", guest: 80, host: 8080
 
@@ -38,8 +38,8 @@ Vagrant.configure("2") do |config|
     # vb.gui = true
 
   # Customize the amount of memory on the VM:
-    hv.memory = "2048"
-    hv.maxmemory = "2048"
+    hv.memory = "4096"
+    hv.maxmemory = "4096"
   end
 
   # Shows the IP address of the host to connect through RDP

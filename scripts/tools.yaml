@@ -1,0 +1,94 @@
+---
+- name: Setup Docker, Kubernetes, and Minikube
+  hosts: localhost
+  become: true
+  tasks:
+    # Configure docker installation
+    - name: Install dnf-plugins-core
+      dnf:
+        name: dnf-plugins-core
+        state: present
+    - name: Add Docker repository
+      command: dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    
+    # Install docker and run
+    - name: Install Docker
+      yum:
+        name: docker-ce
+        state: present
+    - name: Start Docker
+      service:
+        name: docker
+        state: started
+        enabled: true
+
+    # Configure Minikube installation
+    - name: Download Minikube binary
+      get_url:
+        url: https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+        dest: /usr/local/bin/minikube
+        mode: '0755'
+
+    # Configure kubernetes installation
+    - name: Add Kubernetes repository
+      copy:
+        content: |
+          [kubernetes]
+          name=Kubernetes
+          baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-\$basearch
+          enabled=1
+          gpgcheck=1
+          repo_gpgcheck=1
+          gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+                 https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+        dest: /etc/yum.repos.d/kubernetes.repo
+
+    # Install kubectl and run
+    - name: Install Kubernetes tools
+      yum:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+        state: present
+    - name: Enable kubelet
+      service:
+        name: kubelet
+        state: started
+        enabled: true
+
+    # Install Helm chart
+    - name: Install Helm chart
+      yum:
+        name:
+          - helm
+
+    # Configure and install Terraform
+    - name: Install yum-utils
+      yum:
+        name: yum-utils
+        state: present
+
+    - name: Add Terrafom repository
+        command: yum-config-manager --add-repo https://rpm.releases.hashicorp.com/RHEL/hashicorp.repo
+
+    - name: Install Terraform
+      yum:
+        name: terraform
+        state: present
+
+    # Configure and install Aws CLI
+    - name: Download AWS CLI repo
+      get_url:
+        url: https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip
+        dest: /tmp/awscliv2.zip
+    
+    - name: Unzip AWS CLI
+      unarchive:
+        src: /tmp/awscliv2.zip
+        dest: /tmp
+        remote_src: yes
+
+    - name: Install AWS CLI
+        command: /tmp/aws/install
+        

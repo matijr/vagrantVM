@@ -11,6 +11,7 @@ yum install -y \
     curl \
     python3 \
     python3-pip \
+    git
 
 # Install GNOME Desktop
 yum groupinstall -y "Server with GUI"
