@@ -1,11 +1,11 @@
 #! /bin/bash
-export PATH=$PATH:~/.local/bin
 
 # Install DevOps Tools
-python3 -m pip install --user ansible
+python3 -m pip install --upgrade pip
+python3 -m pip install ansible
 
 # Run ansible playbook
-ansible-playbook -i localhost, -c local scripts/tools.yaml
+ansible-playbook -i localhost, -c local /vagrant_data/scripts/tools.yaml
 
 # Install VS Code
 rpm --import https://packages.microsoft.com/keys/microsoft.asc

@@ -22,13 +22,14 @@ Vagrant.configure("2") do |config|
     config.vm.provision "DEVOPS", after: "APPS", 
     type: "shell",
     path: "./scripts/devops-tools.sh"
-
+    
   config.vm.network "forwarded_port", guest: 80, host: 8080
 
-  # config.vm.synced_folder "./data", "/vagrant_data/shared", type: "smb",
+  config.vm.synced_folder ".", "/vagrant_data", 
+  type: "rsync"
 
   # Allow or disable the synced folder
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+  # config.vm.synced_folder ".", "/vagrant", disabled: true
 
   # Configure the VM provider, such as VirtualBox, VMware or Hyper-V
   config.vm.provider "hyperv" do |hv|
