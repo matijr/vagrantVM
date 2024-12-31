@@ -1,8 +1,10 @@
 #! /bin/bash
 
+export PATH=$PATH:/home/vagrant/.local/bin
+
 # Install DevOps Tools
 python3 -m pip install --upgrade pip
-python3 -m pip install ansible
+python3 -m pip install ansible --user ansible
 
 # Run ansible playbook
 ansible-playbook -i localhost, -c local /vagrant_data/scripts/tools.yaml

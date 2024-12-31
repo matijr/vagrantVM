@@ -35,12 +35,11 @@
         content: |
           [kubernetes]
           name=Kubernetes
-          baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+          baseurl=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/
           enabled=1
           gpgcheck=1
           repo_gpgcheck=1
-          gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-                 https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+          gpgkey=https://pkgs.k8s.io/core:/stable:/v1.32/rpm/repodata/repomd.xml.key
         dest: /etc/yum.repos.d/kubernetes.repo
 
     # Install kubectl and run
@@ -58,10 +57,20 @@
         enabled: true
 
     # Install Helm chart
-    - name: Install Helm chart
-      yum:
-        name:
-          - helm
+    - name: Download Helm binary
+      get_url:
+        url: https://get.helm.sh/helm-v3.13.0-linux-amd64.tar.gz
+        dest: /tmp/helm.tar.gz
+    - name: Extract Helm binary
+      unarchive:
+        src: /tmp/helm.tar.gz
+        dest: /tmp/
+        remote_src: yes
+    - name: Move Helm to /usr/local/bin
+      copy:
+        src: /tmp/linux-amd64/helm
+        dest: /usr/local/bin/helm
+        mode: '0755'
 
     # Configure and install Terraform
     - name: Install yum-utils
